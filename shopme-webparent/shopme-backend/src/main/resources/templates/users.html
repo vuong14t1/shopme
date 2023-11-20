@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Shopme Admin Control Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h1>Welcome to Shopme Admin Control Page</h1>
+    <h1>Welcome to Shopme Users Control Page</h1>
+    <div>
+        <table class="table table-responsive-xl table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>User ID</th>
+                    <th>Photos</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Roles</th>
+                    <th>Enabled</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user: ${listUsers}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.photos}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.roles}"></td>
+                    <td th:text="${user.enabled}"></td>
+                    <td>Edit &nbsp; Delete</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
