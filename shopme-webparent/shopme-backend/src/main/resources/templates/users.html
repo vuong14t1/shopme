@@ -87,19 +87,21 @@
                     <td th:text="${user.lastName}"></td>
                     <td th:text="${user.roles}"></td>
                     <td>
-                        <a th:if="${user.enabled == true}" class="fa-solid fa-circle-check fa-lg" style="color: green" th:href="@{/users/status/0}"></a>
-                        <a th:if="${user.enabled == false}" class="fa-solid fa-circle-check fa-lg" style="color: darkgray" th:href="@{/users/status/1}"></a>
+                        <a th:if="${user.enabled == true}" class="fa-solid fa-circle-check fa-lg" style="color: green"
+                           th:href="@{/users/status/0}"></a>
+                        <a th:if="${user.enabled == false}" class="fa-solid fa-circle-check fa-lg"
+                           style="color: darkgray" th:href="@{/users/status/1}"></a>
                     </td>
                     <td>
-                        <a class="fa-solid fa-user-pen fa-lg" style="color: aquamarine" th:href="@{/users/edit}"></a>
-                        <a class="fa-solid fa-trash fa-lg" style="color: red" th:href="@{/users/delete}"></a>
+                        <a class="fa-solid fa-user-pen fa-lg" style="color: aquamarine"
+                           th:href="@{'/users/edit/' + ${user.id}}" title="Edit this user"></a>
+                        <a class="fa-solid fa-trash fa-lg" style="color: red" th:href="@{'/users/delete/' + ${user.id}}" title="Delete this user"></a>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-    <div>
+
         <p>Shopme Control Panel - Copyright &copy; Shopme</p>
     </div>
 </div>

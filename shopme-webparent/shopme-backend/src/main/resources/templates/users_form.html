@@ -59,10 +59,11 @@
         </nav>
     </div>
     <div>
-        <h1>Add New User</h1>
+        <h1>Manage User | [[${pageTitle}]]</h1>
     </div>
     <!--/*@thymesVar id="user" type="java"*/-->
     <form id="formNewUser" th:action="@{/users}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}" >
+        <input type="hidden" th:field="*{id}">
         <div class="border border-primary rounded p-3">
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Email address</label>
@@ -85,17 +86,25 @@
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Password</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" placeholder="Enter Password" th:field="*{password}" required minlength="8" maxlength="128">
+                    <input th:if="${user.id == null}" type="password" class="form-control" placeholder="Enter Password" th:field="*{password}" required minlength="8" maxlength="128">
+                    <input th:if="${user.id != null}" type="password" class="form-control" placeholder="Enter Password" th:field="*{password}" minlength="8" maxlength="128">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 col-form-label">Password</label>
+                <label class="col-sm-4 col-form-label">Roles</label>
                 <div class="col-sm-8">
                     <th:block th:each="role: ${listRoles}">
                         <input class="mr-1" type="checkbox" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}">
                         <span>[[${role.description}]]</span>
                         <br>
                     </th:block>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Enabled</label>
+                <div class="col-sm-8">
+                    <input type="checkbox" th:field="*{enabled}">
                 </div>
             </div>
             <div class="text-center">
@@ -140,11 +149,15 @@
             let url = "[[@{/users/check-email}]]";
             let email = $("#email").val();
             let csrf = $("input[name='_csrf']").val();
-            let params = {email: email, _csrf: csrf};
+            let userId = $("#id").val();
+            let params = {id: userId, email: email, _csrf: csrf};
 
             $.post(url, params, (res) => {
                 if(res === "OK"){
-                    this.submit();
+                    var formData = $(this).serialize();
+                    console.log("vao day oki" + JSON.stringify(formData));
+                    $('#formNewUser')[0].submit();
+
                 }else if(res === "Duplicated"){
                     showModalDialog("Warning", "There is another user having the email: " + email);
                 }else{
