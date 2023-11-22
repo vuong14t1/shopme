@@ -4,7 +4,6 @@ import com.shopme.admin.service.IUserService;
 import com.shopme.shopmecommon.model.Role;
 import com.shopme.shopmecommon.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +40,14 @@ public class UserController {
 
     @PostMapping("/users")
     public String addUser(User user, RedirectAttributes redirectAttributes){
-        userService.saveUser(user);
-        redirectAttributes.addFlashAttribute("message", "User has been saved successfully.");
+        String msg = "User has been saved successfully.";
+        if(userService.isUniqueEmail(user.getEmail())){
+            userService.saveUser(user);
+        }else{
+            msg = "This email is duplicated.";
+        }
+        redirectAttributes.addFlashAttribute("message", msg);
         return "redirect:/users";
     }
+
 }

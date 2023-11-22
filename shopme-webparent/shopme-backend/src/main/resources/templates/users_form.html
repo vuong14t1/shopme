@@ -4,9 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Shopme Admin Control Page</title>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+
 </head>
 <body>
     <div class="container-fluid">
@@ -61,7 +62,7 @@
         <h1>Add New User</h1>
     </div>
     <!--/*@thymesVar id="user" type="java"*/-->
-    <form th:action="@{/users}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}">
+    <form id="formNewUser" th:action="@{/users}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}" >
         <div class="border border-primary rounded p-3">
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Email address</label>
@@ -103,6 +104,29 @@
             </div>
         </div>
     </form>
+        <div class="modal" id="modalDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalTitle">Modal Title</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <p id="modalBody">This is your modal content.</p>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
 </div>
 <script type="text/javascript">
     $(document).ready(() => {
@@ -110,7 +134,32 @@
             // Redirect to the desired page
             window.location.href = '[[@{/users}]]';
         });
+
+        $("#formNewUser").submit((event)=>{
+            event.preventDefault();
+            let url = "[[@{/users/check-email}]]";
+            let email = $("#email").val();
+            let csrf = $("input[name='_csrf']").val();
+            let params = {email: email, _csrf: csrf};
+
+            $.post(url, params, (res) => {
+                if(res === "OK"){
+                    this.submit();
+                }else if(res === "Duplicated"){
+                    showModalDialog("Warning", "There is another user having the email: " + email);
+                }else{
+                    showModalDialog("Warning", "Unknown response from server");
+                }
+            }).fail(()=>{
+                showModalDialog("Warning", "Unknown response from server");
+            });
+        });
     });
+function showModalDialog(title, message){
+    $("#modalBody").text(message);
+    $("#modalTitle").text(title);
+    $("#modalDialog").modal();
+}
 </script>
 </body>
 </html>
